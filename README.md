@@ -55,7 +55,52 @@ php artisan test --coverage
 
 ## 📝 Documentation API
 
-La documentation API sera disponible sur `/api/documentation` (à implémenter avec Swagger/OpenAPI).
+La documentation Swagger est disponible sur `/api/documentation` après avoir lancé le serveur :
+
+```bash
+php artisan serve
+# Accéder à http://127.0.0.1:8000/api/documentation
+```
+
+## 🌿 Workflow Git Flow
+
+Le projet utilise un workflow Git Flow avec les branches suivantes :
+
+- **main** : Branche principale (production)
+- **develop** : Branche de développement
+
+### Créer une nouvelle fonctionnalité
+
+```bash
+# 1. Se placer sur develop
+git checkout develop
+git pull origin develop
+
+# 2. Créer une branche feature
+git checkout -b feature/nom-de-la-fonctionnalite
+
+# 3. Développer et commiter
+git add .
+git commit -m "feat: description de la fonctionnalité"
+
+# 4. Pousser la branche
+git push origin feature/nom-de-la-fonctionnalite
+
+# 5. Merger sur develop
+git checkout develop
+git merge feature/nom-de-la-fonctionnalite
+git push origin develop
+
+# 6. Merger develop sur main
+git checkout main
+git merge develop
+git push origin main
+
+# 7. Supprimer la branche feature (optionnel)
+git branch -d feature/nom-de-la-fonctionnalite
+```
+
+Voir `GIT_WORKFLOW.md` pour plus de détails.
 
 ## 🔐 Rôles Utilisateurs
 

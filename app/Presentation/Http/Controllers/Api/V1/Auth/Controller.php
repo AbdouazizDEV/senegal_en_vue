@@ -56,6 +56,43 @@ use App\Presentation\Http\Controllers\Controller;
  *     name="Administration",
  *     description="Endpoints d'administration pour la gestion de la plateforme"
  * )
+ * 
+ * @OA\Schema(
+ *     schema="Experience",
+ *     type="object",
+ *     required={"id", "uuid", "title", "description", "type", "status", "price"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="title", type="string", example="Visite guidée de Dakar"),
+ *     @OA\Property(property="description", type="string", example="Découvrez les merveilles de Dakar..."),
+ *     @OA\Property(property="short_description", type="string", nullable=true),
+ *     @OA\Property(property="slug", type="string", example="visite-guidee-dakar"),
+ *     @OA\Property(property="type", type="string", enum={"activity", "tour", "workshop", "event", "accommodation", "restaurant"}, example="tour"),
+ *     @OA\Property(property="type_label", type="string", example="Visite guidée"),
+ *     @OA\Property(property="status", type="string", enum={"draft", "pending", "approved", "rejected", "suspended", "reported"}, example="pending"),
+ *     @OA\Property(property="status_label", type="string", example="En attente"),
+ *     @OA\Property(property="price", type="number", format="float", example=15000.00),
+ *     @OA\Property(property="currency", type="string", example="XOF"),
+ *     @OA\Property(property="duration_minutes", type="integer", nullable=true, example=120),
+ *     @OA\Property(property="max_participants", type="integer", nullable=true, example=20),
+ *     @OA\Property(property="min_participants", type="integer", example=1),
+ *     @OA\Property(property="images", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="location", type="object", nullable=true),
+ *     @OA\Property(property="schedule", type="object", nullable=true),
+ *     @OA\Property(property="tags", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="amenities", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="is_featured", type="boolean", example=false),
+ *     @OA\Property(property="views_count", type="integer", example=0),
+ *     @OA\Property(property="bookings_count", type="integer", example=0),
+ *     @OA\Property(property="rating", type="number", format="float", nullable=true),
+ *     @OA\Property(property="reviews_count", type="integer", example=0),
+ *     @OA\Property(property="rejection_reason", type="string", nullable=true),
+ *     @OA\Property(property="published_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="approved_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="rejected_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
  */
 abstract class Controller extends \App\Presentation\Http\Controllers\Controller
 {

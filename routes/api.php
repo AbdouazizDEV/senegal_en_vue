@@ -5,8 +5,8 @@ use App\Presentation\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Presentation\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Presentation\Http\Controllers\Api\V1\Auth\PasswordController;
 use App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController;
-
-
+use App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController;
+use App\Presentation\Http\Controllers\Api\V1\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes - Sénégal en Vue
@@ -77,19 +77,22 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
     Route::prefix('admin')->middleware('role:admin')->group(function () {
         
         // Gestion des utilisateurs
-        Route::get('/users', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'index']);
-        Route::get('/users/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'statistics']);
-        Route::get('/users/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'show']);
-        Route::put('/users/{id}/activate', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'activate']);
-        Route::put('/users/{id}/suspend', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'suspend']);
-        Route::put('/users/{id}/validate', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'validate']);
-        Route::delete('/users/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\UserController::class, 'destroy']);
+        Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users/statistics', [UserController::class, 'statistics']);
+        Route::get('/users/{id}', [UserController::class, 'show']);
+        Route::put('/users/{id}/activate', [UserController::class, 'activate']);
+        Route::put('/users/{id}/suspend', [UserController::class, 'suspend']);
+        Route::put('/users/{id}/validate', [UserController::class, 'validate']);
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
         
-        // Gestion des expériences (modération) - TODO: Créer les contrôleurs
-        // Route::get('/experiences', [App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController::class, 'index']);
-        // Route::get('/experiences/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController::class, 'show']);
-        // Route::post('/experiences/{id}/approve', [App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController::class, 'approve']);
-        // Route::post('/experiences/{id}/reject', [App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController::class, 'reject']);
+        // Gestion des expériences
+        Route::get('/experiences', [ExperienceController::class, 'index']);
+        Route::get('/experiences/pending', [ExperienceController::class, 'pending']);
+        Route::get('/experiences/reports', [ExperienceController::class, 'reports']);
+        Route::get('/experiences/{id}', [ExperienceController::class, 'show']);
+        Route::put('/experiences/{id}', [ExperienceController::class, 'update']);
+        Route::put('/experiences/{id}/moderate', [ExperienceController::class, 'moderate']);
+        Route::delete('/experiences/{id}', [ExperienceController::class, 'destroy']);
         
         // Gestion des réservations - TODO: Créer les contrôleurs
         // Route::get('/bookings', [App\Presentation\Http\Controllers\Api\V1\Admin\BookingController::class, 'index']);

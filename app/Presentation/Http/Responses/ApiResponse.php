@@ -42,12 +42,20 @@ class ApiResponse
      */
     public static function paginated(
         LengthAwarePaginator $paginator,
-        string $message = 'Success'
+        string $message = 'Success',
+        ?callable $transformer = null
     ): JsonResponse {
+        $items = $paginator->items();
+        
+        // Appliquer le transformer si fourni
+        if ($transformer !== null) {
+            $items = array_map($transformer, $items);
+        }
+        
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data' => $paginator->items(),
+            'data' => $items,
             'meta' => [
                 'current_page' => $paginator->currentPage(),
                 'last_page' => $paginator->lastPage(),

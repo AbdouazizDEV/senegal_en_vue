@@ -51,6 +51,11 @@ use App\Presentation\Http\Controllers\Controller;
  *     name="Authentification",
  *     description="Endpoints d'authentification et de gestion des utilisateurs"
  * )
+ * 
+ * @OA\Tag(
+ *     name="Administration",
+ *     description="Endpoints d'administration pour la gestion de la plateforme"
+ * )
  */
 abstract class Controller extends \App\Presentation\Http\Controllers\Controller
 {

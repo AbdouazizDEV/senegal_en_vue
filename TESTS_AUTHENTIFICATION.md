@@ -250,3 +250,4 @@ curl -X POST http://127.0.0.1:8000/api/v1/auth/refresh \
 4. **Rôles** : `traveler`, `provider`, `admin`, `institution`
 5. **Régions valides** : `dakar`, `thies`, `saint-louis`, `diourbel`, `fatick`, `kaffrine`, `kaolack`, `kedougou`, `kolda`, `louga`, `matam`, `sedhiou`, `tambacounda`, `ziguinchor`
 
+

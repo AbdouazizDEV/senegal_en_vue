@@ -22,5 +22,9 @@ interface UserRepositoryInterface
     public function delete(string $id): bool;
     
     public function findByRole(UserRole $role, int $perPage = 15);
+    
+    public function getAll(array $filters = [], int $perPage = 15);
+    
+    public function getStatistics(): array;
 }
 

@@ -63,5 +63,68 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         return User::role($role)->paginate($perPage);
     }
+    
+    public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = User::query();
+        
+        if (isset($filters['role'])) {
+            $query->where('role', $filters['role']);
+        }
+        
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+        
+        if (isset($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+        
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+    
+    public function getStatistics(): array
+    {
+        $totalUsers = User::count();
+        $activeUsers = User::where('status', 'active')->count();
+        $pendingUsers = User::where('status', 'pending_verification')->count();
+        $suspendedUsers = User::where('status', 'suspended')->count();
+        
+        $travelers = User::where('role', 'traveler')->count();
+        $providers = User::where('role', 'provider')->count();
+        $admins = User::where('role', 'admin')->count();
+        $institutions = User::where('role', 'institution')->count();
+        
+        $todayRegistrations = User::whereDate('created_at', today())->count();
+        $thisWeekRegistrations = User::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        $thisMonthRegistrations = User::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        
+        return [
+            'total' => $totalUsers,
+            'by_status' => [
+                'active' => $activeUsers,
+                'pending_verification' => $pendingUsers,
+                'suspended' => $suspendedUsers,
+            ],
+            'by_role' => [
+                'traveler' => $travelers,
+                'provider' => $providers,
+                'admin' => $admins,
+                'institution' => $institutions,
+            ],
+            'registrations' => [
+                'today' => $todayRegistrations,
+                'this_week' => $thisWeekRegistrations,
+                'this_month' => $thisMonthRegistrations,
+            ],
+        ];
+    }
 }
 

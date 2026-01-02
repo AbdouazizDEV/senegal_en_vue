@@ -236,3 +236,4 @@ Il est recommandé de protéger les branches `main` et `develop` sur GitHub :
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Git Documentation](https://git-scm.com/doc)
 
+

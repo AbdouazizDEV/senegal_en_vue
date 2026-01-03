@@ -102,10 +102,21 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::put('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus']);
         Route::put('/bookings/{id}/cancel', [AdminBookingController::class, 'cancel']);
         
-        // Gestion des paiements - TODO: Créer les contrôleurs
-        // Route::get('/payments', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'index']);
-        // Route::get('/payments/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'show']);
-        // Route::post('/payments/{id}/refund', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'refund']);
+        // Gestion des paiements
+        Route::get('/payments', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'index']);
+        Route::get('/payments/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'statistics']);
+        Route::get('/payments/disputes', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'disputes']);
+        Route::get('/payments/commissions', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'commissions']);
+        Route::get('/payments/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'show']);
+        Route::post('/payments/refund', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'refund']);
+        Route::put('/payments/{id}/transfer', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'transfer']);
+        
+        // Gestion des avis et notations
+        Route::get('/reviews', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'index']);
+        Route::get('/reviews/reported', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'reported']);
+        Route::get('/reviews/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'statistics']);
+        Route::put('/reviews/{id}/moderate', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'moderate']);
+        Route::delete('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'destroy']);
         
         // Statistiques globales - TODO: Créer les contrôleurs
         // Route::get('/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\StatisticsController::class, 'index']);

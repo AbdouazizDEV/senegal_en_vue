@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Presentation\Http\Controllers\Api\V1\Auth\LoginController;
 use App\Presentation\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Presentation\Http\Controllers\Api\V1\Auth\PasswordController;
-use App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController;
 use App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController;
 use App\Presentation\Http\Controllers\Api\V1\Admin\UserController;
+use App\Presentation\Http\Controllers\Api\V1\Admin\BookingController as AdminBookingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes - Sénégal en Vue
@@ -94,9 +94,13 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::put('/experiences/{id}/moderate', [ExperienceController::class, 'moderate']);
         Route::delete('/experiences/{id}', [ExperienceController::class, 'destroy']);
         
-        // Gestion des réservations - TODO: Créer les contrôleurs
-        // Route::get('/bookings', [App\Presentation\Http\Controllers\Api\V1\Admin\BookingController::class, 'index']);
-        // Route::get('/bookings/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\BookingController::class, 'show']);
+        // Gestion des réservations
+        Route::get('/bookings', [AdminBookingController::class, 'index']);
+        Route::get('/bookings/statistics', [AdminBookingController::class, 'statistics']);
+        Route::get('/bookings/disputes', [AdminBookingController::class, 'disputes']);
+        Route::get('/bookings/{id}', [AdminBookingController::class, 'show']);
+        Route::put('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus']);
+        Route::put('/bookings/{id}/cancel', [AdminBookingController::class, 'cancel']);
         
         // Gestion des paiements - TODO: Créer les contrôleurs
         // Route::get('/payments', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'index']);

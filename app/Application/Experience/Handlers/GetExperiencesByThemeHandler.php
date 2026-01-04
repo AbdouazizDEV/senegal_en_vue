@@ -2,17 +2,18 @@
 
 namespace App\Application\Experience\Handlers;
 
-use App\Application\Experience\Queries\GetExperienceByIdQuery;
+use App\Application\Experience\Queries\GetExperiencesByThemeQuery;
 use App\Infrastructure\Repositories\Contracts\ExperienceRepositoryInterface;
 
-class GetExperienceByIdHandler
+class GetExperiencesByThemeHandler
 {
     public function __construct(
         private ExperienceRepositoryInterface $experienceRepository
     ) {}
 
-    public function handle(GetExperienceByIdQuery $query)
+    public function handle(GetExperiencesByThemeQuery $query)
     {
-        return $this->experienceRepository->findById($query->experienceId);
+        return $this->experienceRepository->getByTheme($query->theme, $query->perPage);
     }
 }
+

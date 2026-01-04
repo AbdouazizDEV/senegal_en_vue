@@ -102,5 +102,155 @@ class EloquentExperienceRepository implements ExperienceRepositoryInterface
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
+
+    public function search(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED);
+
+        if (isset($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('short_description', 'like', "%{$search}%");
+            });
+        }
+
+        if (isset($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (isset($filters['region'])) {
+            $query->whereJsonContains('location->region', $filters['region']);
+        }
+
+        if (isset($filters['city'])) {
+            $query->whereJsonContains('location->city', $filters['city']);
+        }
+
+        if (isset($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        }
+
+        if (isset($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
+        }
+
+        if (isset($filters['tags'])) {
+            $tags = is_array($filters['tags']) ? $filters['tags'] : [$filters['tags']];
+            foreach ($tags as $tag) {
+                $query->whereJsonContains('tags', $tag);
+            }
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+
+    public function getFeatured(int $limit = 10): Collection
+    {
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->where('is_featured', true)
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function getRecent(int $limit = 10): Collection
+    {
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function getByRegion(string $region, int $perPage = 15): LengthAwarePaginator
+    {
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->whereJsonContains('location->region', $region)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function getByTheme(string $theme, int $perPage = 15): LengthAwarePaginator
+    {
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->whereJsonContains('tags', $theme)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function getByPriceRange(float $minPrice, float $maxPrice, int $perPage = 15): LengthAwarePaginator
+    {
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->whereBetween('price', [$minPrice, $maxPrice])
+            ->orderBy('price', 'asc')
+            ->paginate($perPage);
+    }
+
+    public function getPhotos(int $experienceId): array
+    {
+        $experience = $this->findById($experienceId);
+        return $experience ? ($experience->images ?? []) : [];
+    }
+
+    public function getSimilar(int $experienceId, int $limit = 5): Collection
+    {
+        $experience = $this->findById($experienceId);
+        
+        if (!$experience) {
+            return collect();
+        }
+
+        $tags = $experience->tags ?? [];
+        $type = $experience->type;
+
+        return Experience::with(['provider'])
+            ->where('status', ExperienceStatus::APPROVED)
+            ->where('id', '!=', $experienceId)
+            ->where(function ($query) use ($tags, $type) {
+                $query->where('type', $type);
+                if (!empty($tags)) {
+                    foreach ($tags as $tag) {
+                        $query->orWhereJsonContains('tags', $tag);
+                    }
+                }
+            })
+            ->limit($limit)
+            ->get();
+    }
+
+    public function checkAvailability(int $experienceId, \DateTime $date, int $participants): bool
+    {
+        $experience = $this->findById($experienceId);
+        
+        if (!$experience) {
+            return false;
+        }
+
+        // Vérifier les participants min/max
+        if ($experience->min_participants && $participants < $experience->min_participants) {
+            return false;
+        }
+
+        if ($experience->max_participants && $participants > $experience->max_participants) {
+            return false;
+        }
+
+        // Vérifier les réservations existantes pour cette date
+        $existingBookings = \App\Domain\Booking\Models\Booking::where('experience_id', $experienceId)
+            ->whereDate('booking_date', $date->format('Y-m-d'))
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->sum('participants_count');
+
+        $availableSlots = ($experience->max_participants ?? 999) - $existingBookings;
+        
+        return $availableSlots >= $participants;
+    }
 }
 

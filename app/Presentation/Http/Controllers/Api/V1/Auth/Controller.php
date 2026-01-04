@@ -57,6 +57,11 @@ use App\Presentation\Http\Controllers\Controller;
  *     description="Endpoints d'administration pour la gestion de la plateforme"
  * )
  * 
+ * @OA\Tag(
+ *     name="Voyageur",
+ *     description="Endpoints pour les voyageurs - Gestion du profil et recherche d'expériences"
+ * )
+ * 
  * @OA\Schema(
  *     schema="Experience",
  *     type="object",

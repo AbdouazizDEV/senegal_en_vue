@@ -23,12 +23,22 @@ use App\Presentation\Http\Controllers\Api\V1\Admin\BookingController as AdminBoo
 
 Route::prefix('v1')->group(function () {
     
-    // Expériences publiques (TODO: Créer les contrôleurs)
-    // Route::get('/experiences', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'index']);
-    // Route::get('/experiences/{id}', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'show']);
-    
-    // Recherche publique (TODO: Créer les contrôleurs)
-    // Route::get('/search', [App\Presentation\Http\Controllers\Api\V1\Public\SearchController::class, 'index']);
+    // ========================================================================
+    // EXPÉRIENCES PUBLIQUES (Accessibles à tous sans authentification)
+    // ========================================================================
+    Route::prefix('experiences')->group(function () {
+        Route::get('/', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'index']);
+        Route::post('/search', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'search']);
+        Route::get('/featured', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'featured']);
+        Route::get('/recent', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'recent']);
+        Route::get('/by-region', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byRegion']);
+        Route::get('/by-theme', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byTheme']);
+        Route::get('/by-price', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byPrice']);
+        Route::get('/{id}', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'show']);
+        Route::get('/{id}/availability', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'availability']);
+        Route::get('/{id}/photos', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'photos']);
+        Route::get('/{id}/similar', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'similar']);
+    });
     
     // Authentification
     Route::prefix('auth')->group(function () {
@@ -136,6 +146,15 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         // Statistiques globales - TODO: Créer les contrôleurs
         // Route::get('/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\StatisticsController::class, 'index']);
         // Route::get('/statistics/dashboard', [App\Presentation\Http\Controllers\Api\V1\Admin\StatisticsController::class, 'dashboard']);
+    });
+    
+    // ========================================================================
+    // ROUTES VOYAGEUR (Authentifiés avec rôle traveler)
+    // ========================================================================
+    Route::prefix('traveler')->middleware('role:traveler')->group(function () {
+        Route::get('/profile', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'show']);
+        Route::put('/profile', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'update']);
+        Route::post('/profile/photo', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'updatePhoto']);
     });
     
     // ========================================================================

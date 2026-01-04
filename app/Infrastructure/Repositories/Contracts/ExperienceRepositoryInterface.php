@@ -26,5 +26,24 @@ interface ExperienceRepositoryInterface
     public function moderate(Experience $experience, ExperienceStatus $status, ?string $reason = null): Experience;
     
     public function getReports(int $perPage = 15): LengthAwarePaginator;
+    
+    // Recherche publique
+    public function search(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    
+    public function getFeatured(int $limit = 10): Collection;
+    
+    public function getRecent(int $limit = 10): Collection;
+    
+    public function getByRegion(string $region, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getByTheme(string $theme, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getByPriceRange(float $minPrice, float $maxPrice, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getPhotos(int $experienceId): array;
+    
+    public function getSimilar(int $experienceId, int $limit = 5): Collection;
+    
+    public function checkAvailability(int $experienceId, \DateTime $date, int $participants): bool;
 }
 

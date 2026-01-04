@@ -36,8 +36,10 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 20,
                 'min_participants' => 2,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/gorée1.jpg',
-                    'https://res.cloudinary.com/example/image/upload/v1/gorée2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/gorée1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/gorée2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/gorée3.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/gorée4.jpg',
                 ],
                 'location' => [
                     'address' => 'Île de Gorée',
@@ -66,7 +68,9 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 8,
                 'min_participants' => 2,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/cuisine1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/cuisine1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/cuisine2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/cuisine3.jpg',
                 ],
                 'location' => [
                     'address' => 'Quartier Almadies',
@@ -93,8 +97,11 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 15,
                 'min_participants' => 4,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/safari1.jpg',
-                    'https://res.cloudinary.com/example/image/upload/v1/safari2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/safari1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/safari2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/safari3.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/safari4.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/safari5.jpg',
                 ],
                 'location' => [
                     'address' => 'Parc National du Niokolo-Koba',
@@ -123,7 +130,8 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 100,
                 'min_participants' => 1,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/musique1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/musique1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/musique2.jpg',
                 ],
                 'location' => [
                     'address' => 'Place de l\'Indépendance',
@@ -152,7 +160,9 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 4,
                 'min_participants' => 1,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/hebergement1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/hebergement1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/hebergement2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/hebergement3.jpg',
                 ],
                 'location' => [
                     'address' => 'Île de Saint-Louis',
@@ -179,7 +189,9 @@ class ExperienceSeeder extends Seeder
                 'max_participants' => 30,
                 'min_participants' => 1,
                 'images' => [
-                    'https://res.cloudinary.com/example/image/upload/v1/restaurant1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/restaurant1.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/restaurant2.jpg',
+                    'https://res.cloudinary.com/example/image/upload/v1/experiences/restaurant3.jpg',
                 ],
                 'location' => [
                     'address' => 'Corniche Ouest',
@@ -200,9 +212,17 @@ class ExperienceSeeder extends Seeder
         foreach ($experiences as $index => $experienceData) {
             $provider = $providers->get($index % $providers->count());
             
-            Experience::create(array_merge($experienceData, [
-                'provider_id' => $provider->id,
-            ]));
+            Experience::firstOrCreate(
+                ['slug' => Str::slug($experienceData['title'])],
+                array_merge($experienceData, [
+                    'provider_id' => $provider->id,
+                    'uuid' => (string) Str::uuid(),
+                    'location' => json_encode($experienceData['location']),
+                    'images' => json_encode($experienceData['images']),
+                    'tags' => json_encode($experienceData['tags']),
+                    'amenities' => json_encode($experienceData['amenities']),
+                ])
+            );
             
             $createdCount++;
         }

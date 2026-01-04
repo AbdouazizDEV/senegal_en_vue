@@ -2,17 +2,18 @@
 
 namespace App\Application\Experience\Handlers;
 
-use App\Application\Experience\Queries\GetExperienceByIdQuery;
+use App\Application\Experience\Queries\GetRecentExperiencesQuery;
 use App\Infrastructure\Repositories\Contracts\ExperienceRepositoryInterface;
 
-class GetExperienceByIdHandler
+class GetRecentExperiencesHandler
 {
     public function __construct(
         private ExperienceRepositoryInterface $experienceRepository
     ) {}
 
-    public function handle(GetExperienceByIdQuery $query)
+    public function handle(GetRecentExperiencesQuery $query)
     {
-        return $this->experienceRepository->findById($query->experienceId);
+        return $this->experienceRepository->getRecent($query->limit);
     }
 }
+

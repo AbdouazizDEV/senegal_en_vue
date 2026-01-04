@@ -118,6 +118,21 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::put('/reviews/{id}/moderate', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'moderate']);
         Route::delete('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'destroy']);
         
+        // Gestion du contenu
+        Route::get('/content/heritage-stories', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'heritageStories']);
+        Route::post('/content/heritage-stories', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'storeHeritageStory']);
+        Route::put('/content/heritage-stories/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'updateHeritageStory']);
+        Route::delete('/content/heritage-stories/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'destroyHeritageStory']);
+        Route::get('/content/blog', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'blog']);
+        Route::post('/content/blog', [App\Presentation\Http\Controllers\Api\V1\Admin\ContentController::class, 'storeBlogPost']);
+        
+        // Gestion des certifications
+        Route::get('/certifications', [App\Presentation\Http\Controllers\Api\V1\Admin\CertificationController::class, 'index']);
+        Route::post('/certifications', [App\Presentation\Http\Controllers\Api\V1\Admin\CertificationController::class, 'store']);
+        Route::put('/certifications/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\CertificationController::class, 'update']);
+        Route::put('/providers/{id}/certify', [App\Presentation\Http\Controllers\Api\V1\Admin\CertificationController::class, 'certifyProvider']);
+        Route::delete('/providers/{id}/certification', [App\Presentation\Http\Controllers\Api\V1\Admin\CertificationController::class, 'revokeCertification']);
+        
         // Statistiques globales - TODO: Créer les contrôleurs
         // Route::get('/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\StatisticsController::class, 'index']);
         // Route::get('/statistics/dashboard', [App\Presentation\Http\Controllers\Api\V1\Admin\StatisticsController::class, 'dashboard']);

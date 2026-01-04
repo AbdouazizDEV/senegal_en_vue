@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             ExperienceSeeder::class,
+            HeritageStorySeeder::class,
+            BlogPostSeeder::class,
+            BookingSeeder::class,
         ]);
     }
 }

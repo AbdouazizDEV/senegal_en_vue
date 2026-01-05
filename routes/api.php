@@ -64,13 +64,21 @@ Route::prefix('v1')->group(function () {
 Route::prefix('v1')->middleware('auth:api')->group(function () {
     
     // ========================================================================
-    // ROUTES VOYAGEUR (Traveler) - TODO: Créer les contrôleurs
+    // ROUTES VOYAGEUR (Traveler)
     // ========================================================================
-    /*
     Route::prefix('traveler')->middleware('role:traveler')->group(function () {
-        // Routes voyageur à implémenter
+        // Mode découverte
+        Route::get('/discovery/suggestions', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'suggestions']);
+        Route::post('/discovery/preferences', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'preferences']);
+        Route::get('/discovery/trending', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'trending']);
+        Route::get('/discovery/hidden-gems', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'hiddenGems']);
+        
+        // Gestion des favoris
+        Route::get('/favorites', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'index']);
+        Route::post('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'store']);
+        Route::delete('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'destroy']);
+        Route::get('/favorites/alerts', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'alerts']);
     });
-    */
     
     // ========================================================================
     // ROUTES PRESTATAIRE (Provider) - TODO: Créer les contrôleurs

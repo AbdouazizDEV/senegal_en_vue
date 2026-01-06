@@ -21,3 +21,4 @@ interface FavoriteRepositoryInterface
     public function getFavoritesWithAlerts(int $userId): Collection;
 }
 
+

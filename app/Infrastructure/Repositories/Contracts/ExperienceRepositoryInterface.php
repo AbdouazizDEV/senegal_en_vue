@@ -26,5 +26,7 @@ interface ExperienceRepositoryInterface
     public function moderate(Experience $experience, ExperienceStatus $status, ?string $reason = null): Experience;
     
     public function getReports(int $perPage = 15): LengthAwarePaginator;
+    
+    public function checkAvailability(int $experienceId, \DateTime $bookingDate, int $participantsCount): bool;
 }
 

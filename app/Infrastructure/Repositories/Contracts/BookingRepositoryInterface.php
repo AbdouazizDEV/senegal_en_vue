@@ -21,5 +21,18 @@ interface BookingRepositoryInterface
     public function cancel(Booking $booking, ?string $reason = null, ?int $cancelledBy = null): Booking;
     
     public function getStatistics(): array;
+    
+    // Méthodes spécifiques pour les voyageurs
+    public function findByTraveler(int $travelerId, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    
+    public function getUpcomingByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getPendingByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getConfirmedByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator;
+    
+    public function getHistoryByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator;
+    
+    public function create(array $data): Booking;
 }
 

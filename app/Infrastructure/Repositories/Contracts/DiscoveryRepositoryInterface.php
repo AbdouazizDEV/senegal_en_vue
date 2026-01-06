@@ -18,3 +18,4 @@ interface DiscoveryRepositoryInterface
     public function getHiddenGems(int $userId, int $limit = 10): Collection;
 }
 
+

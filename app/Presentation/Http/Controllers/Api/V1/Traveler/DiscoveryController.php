@@ -10,7 +10,7 @@ use App\Application\Discovery\Handlers\UpdatePreferencesHandler;
 use App\Application\Discovery\Queries\GetHiddenGemsQuery;
 use App\Application\Discovery\Queries\GetPersonalizedSuggestionsQuery;
 use App\Application\Discovery\Queries\GetTrendingExperiencesQuery;
-use App\Presentation\Http\Controllers\Api\V1\Auth\Controller;
+use App\Presentation\Http\Controllers\Api\V1\Auth\BaseController;
 use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ use OpenApi\Attributes as OA;
     name: "Voyageur - Découverte",
     description: "Endpoints pour le mode découverte et les suggestions personnalisées"
 )]
-class DiscoveryController extends Controller
+class DiscoveryController extends BaseController
 {
     public function __construct(
         private GetPersonalizedSuggestionsHandler $getPersonalizedSuggestionsHandler,
@@ -284,4 +284,5 @@ class DiscoveryController extends Controller
         return ApiResponse::success($experiences->values(), 'Pépites cachées récupérées avec succès');
     }
 }
+
 

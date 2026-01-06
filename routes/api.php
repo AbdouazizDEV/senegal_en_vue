@@ -68,6 +68,17 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::post('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'store']);
         Route::delete('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'destroy']);
         Route::get('/favorites/alerts', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'alerts']);
+        
+        // Gestion des réservations
+        Route::get('/bookings', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'index']);
+        Route::post('/bookings', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'store']);
+        Route::get('/bookings/upcoming', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'upcoming']);
+        Route::get('/bookings/pending', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'pending']);
+        Route::get('/bookings/confirmed', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'confirmed']);
+        Route::get('/bookings/history', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'history']);
+        Route::get('/bookings/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'show']);
+        Route::put('/bookings/{id}/cancel', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'cancel']);
+        Route::get('/bookings/{id}/voucher', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'voucher']);
     });
     
     // ========================================================================

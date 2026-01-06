@@ -44,6 +44,5 @@ interface ExperienceRepositoryInterface
     
     public function getSimilar(int $experienceId, int $limit = 5): Collection;
     
-    public function checkAvailability(int $experienceId, \DateTime $date, int $participants): bool;
+    public function checkAvailability(int $experienceId, \DateTime $bookingDate, int $participantsCount): bool;
 }
-

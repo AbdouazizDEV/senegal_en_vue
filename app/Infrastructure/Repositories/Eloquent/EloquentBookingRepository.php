@@ -145,5 +145,74 @@ class EloquentBookingRepository implements BookingRepositoryInterface
             'disputes_count' => $disputesCount,
         ];
     }
+
+    public function findByTraveler(int $travelerId, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Booking::where('traveler_id', $travelerId)
+            ->with(['experience', 'provider']);
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['payment_status'])) {
+            $query->where('payment_status', $filters['payment_status']);
+        }
+
+        if (isset($filters['date_from'])) {
+            $query->where('booking_date', '>=', $filters['date_from']);
+        }
+
+        if (isset($filters['date_to'])) {
+            $query->where('booking_date', '<=', $filters['date_to']);
+        }
+
+        return $query->orderBy('booking_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function getUpcomingByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator
+    {
+        return Booking::where('traveler_id', $travelerId)
+            ->where('booking_date', '>=', now()->toDateString())
+            ->whereIn('status', [BookingStatus::PENDING, BookingStatus::CONFIRMED])
+            ->with(['experience', 'provider'])
+            ->orderBy('booking_date', 'asc')
+            ->orderBy('booking_time', 'asc')
+            ->paginate($perPage);
+    }
+
+    public function getPendingByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator
+    {
+        return Booking::where('traveler_id', $travelerId)
+            ->where('status', BookingStatus::PENDING)
+            ->with(['experience', 'provider'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function getConfirmedByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator
+    {
+        return Booking::where('traveler_id', $travelerId)
+            ->where('status', BookingStatus::CONFIRMED)
+            ->with(['experience', 'provider'])
+            ->orderBy('booking_date', 'asc')
+            ->paginate($perPage);
+    }
+
+    public function getHistoryByTraveler(int $travelerId, int $perPage = 15): LengthAwarePaginator
+    {
+        return Booking::where('traveler_id', $travelerId)
+            ->whereIn('status', [BookingStatus::COMPLETED, BookingStatus::CANCELLED, BookingStatus::REFUNDED])
+            ->with(['experience', 'provider'])
+            ->orderBy('booking_date', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function create(array $data): Booking
+    {
+        return Booking::create($data);
+    }
 }
 

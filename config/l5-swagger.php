@@ -164,7 +164,9 @@ return [
              * @note This option overwrites `paths.excludes`
              * @see \OpenApi\scan
              */
-            'exclude' => [],
+            'exclude' => [
+                base_path('app/Presentation/Http/Controllers/Api/V1/Auth/Controller.php'),
+            ],
 
             /*
              * Allows to generate specs either for OpenAPI 3.0.0 or OpenAPI 3.1.0.

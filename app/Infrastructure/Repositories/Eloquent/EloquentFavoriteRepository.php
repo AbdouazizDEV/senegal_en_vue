@@ -60,3 +60,4 @@ class EloquentFavoriteRepository implements FavoriteRepositoryInterface
     }
 }
 
+

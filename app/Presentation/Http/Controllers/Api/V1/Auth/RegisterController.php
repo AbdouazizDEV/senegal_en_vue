@@ -6,7 +6,7 @@ use App\Application\User\Commands\RegisterProviderCommand;
 use App\Application\User\Commands\RegisterTravelerCommand;
 use App\Application\User\Handlers\RegisterProviderHandler;
 use App\Application\User\Handlers\RegisterTravelerHandler;
-use App\Presentation\Http\Controllers\Controller;
+use App\Presentation\Http\Controllers\Api\V1\Auth\BaseController;
 use App\Presentation\Http\Requests\Auth\RegisterProviderRequest;
 use App\Presentation\Http\Requests\Auth\RegisterTravelerRequest;
 use App\Presentation\Http\Resources\UserResource;
@@ -14,7 +14,7 @@ use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
-class RegisterController extends Controller
+class RegisterController extends BaseController
 {
     public function __construct(
         private RegisterTravelerHandler $registerTravelerHandler,

@@ -10,7 +10,7 @@ use App\Application\Favorite\Handlers\GetFavoritesHandler;
 use App\Application\Favorite\Handlers\RemoveFavoriteHandler;
 use App\Application\Favorite\Queries\GetFavoritesAlertsQuery;
 use App\Application\Favorite\Queries\GetFavoritesQuery;
-use App\Presentation\Http\Controllers\Api\V1\Auth\Controller;
+use App\Presentation\Http\Controllers\Api\V1\Auth\BaseController;
 use App\Presentation\Http\Resources\ExperienceResource;
 use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +21,7 @@ use OpenApi\Attributes as OA;
     name: "Voyageur - Favoris",
     description: "Endpoints pour la gestion des expériences favorites"
 )]
-class FavoriteController extends Controller
+class FavoriteController extends BaseController
 {
     public function __construct(
         private GetFavoritesHandler $getFavoritesHandler,
@@ -300,4 +300,5 @@ class FavoriteController extends Controller
         return ApiResponse::success($alerts->values(), 'Alertes récupérées avec succès');
     }
 }
+
 

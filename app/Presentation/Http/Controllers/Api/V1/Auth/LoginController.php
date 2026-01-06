@@ -4,7 +4,7 @@ namespace App\Presentation\Http\Controllers\Api\V1\Auth;
 
 use App\Domain\User\Enums\UserStatus;
 use App\Infrastructure\Repositories\Contracts\UserRepositoryInterface;
-use App\Presentation\Http\Controllers\Controller;
+use App\Presentation\Http\Controllers\Api\V1\Auth\BaseController;
 use App\Presentation\Http\Resources\UserResource;
 use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use OpenApi\Attributes as OA;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class LoginController extends Controller
+class LoginController extends BaseController
 {
     public function __construct(
         private UserRepositoryInterface $userRepository

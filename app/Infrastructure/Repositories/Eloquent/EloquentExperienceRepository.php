@@ -225,7 +225,7 @@ class EloquentExperienceRepository implements ExperienceRepositoryInterface
             ->get();
     }
 
-    public function checkAvailability(int $experienceId, \DateTime $date, int $participants): bool
+    public function checkAvailability(int $experienceId, \DateTime $bookingDate, int $participantsCount): bool
     {
         $experience = $this->findById($experienceId);
         
@@ -233,24 +233,30 @@ class EloquentExperienceRepository implements ExperienceRepositoryInterface
             return false;
         }
 
-        // Vérifier les participants min/max
-        if ($experience->min_participants && $participants < $experience->min_participants) {
+        // Vérifier que la date n'est pas dans le passé
+        $today = new \DateTime('today');
+        if ($bookingDate < $today) {
             return false;
         }
 
-        if ($experience->max_participants && $participants > $experience->max_participants) {
-            return false;
+        // Vérifier la disponibilité des places si max_participants est défini
+        if ($experience->max_participants) {
+            // Compter les participants déjà réservés pour cette date
+            $existingBookings = \App\Domain\Booking\Models\Booking::where('experience_id', $experienceId)
+                ->whereDate('booking_date', $bookingDate->format('Y-m-d'))
+                ->whereIn('status', [
+                    \App\Domain\Booking\Enums\BookingStatus::PENDING,
+                    \App\Domain\Booking\Enums\BookingStatus::CONFIRMED
+                ])
+                ->sum('participants_count');
+
+            $availableSlots = $experience->max_participants - $existingBookings;
+            
+            if ($participantsCount > $availableSlots) {
+                return false;
+            }
         }
 
-        // Vérifier les réservations existantes pour cette date
-        $existingBookings = \App\Domain\Booking\Models\Booking::where('experience_id', $experienceId)
-            ->whereDate('booking_date', $date->format('Y-m-d'))
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->sum('participants_count');
-
-        $availableSlots = ($experience->max_participants ?? 999) - $existingBookings;
-        
-        return $availableSlots >= $participants;
+        return true;
     }
 }
-

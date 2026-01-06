@@ -3,7 +3,7 @@
 namespace App\Presentation\Http\Controllers\Api\V1\Auth;
 
 use App\Infrastructure\Repositories\Contracts\UserRepositoryInterface;
-use App\Presentation\Http\Controllers\Controller;
+use App\Presentation\Http\Controllers\Api\V1\Auth\BaseController;
 use App\Presentation\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Attributes as OA;
 
-class PasswordController extends Controller
+class PasswordController extends BaseController
 {
     public function __construct(
         private UserRepositoryInterface $userRepository

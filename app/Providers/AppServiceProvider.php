@@ -55,6 +55,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Infrastructure\Repositories\Eloquent\EloquentDiscoveryRepository::class
         );
         
+        $this->app->bind(
+            \App\Infrastructure\Repositories\Contracts\TravelBookRepositoryInterface::class,
+            \App\Infrastructure\Repositories\Eloquent\EloquentTravelBookRepository::class
+        );
+        
         // Enregistrer les handlers (auto-wiring via constructeur, mais on peut aussi les enregistrer explicitement)
         // Les handlers sont automatiquement résolus par Laravel grâce à l'injection de dépendances
     }

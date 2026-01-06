@@ -111,5 +111,65 @@ class EloquentReviewRepository implements ReviewRepositoryInterface
             ],
         ];
     }
+
+    public function findByTravelerId(int $travelerId, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Review::with(['experience', 'booking', 'provider'])
+            ->where('traveler_id', $travelerId);
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['experience_id'])) {
+            $query->where('experience_id', $filters['experience_id']);
+        }
+
+        if (isset($filters['rating'])) {
+            $query->where('rating', $filters['rating']);
+        }
+
+        $orderBy = $filters['order_by'] ?? 'created_at';
+        $orderDirection = $filters['order_direction'] ?? 'desc';
+
+        return $query->orderBy($orderBy, $orderDirection)->paginate($perPage);
+    }
+
+    public function findByExperienceId(int $experienceId, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Review::with(['traveler', 'booking'])
+            ->where('experience_id', $experienceId)
+            ->where('status', ReviewStatus::APPROVED);
+
+        if (isset($filters['rating'])) {
+            $query->where('rating', $filters['rating']);
+        }
+
+        if (isset($filters['is_verified'])) {
+            $query->where('is_verified', $filters['is_verified']);
+        }
+
+        $orderBy = $filters['order_by'] ?? 'created_at';
+        $orderDirection = $filters['order_direction'] ?? 'desc';
+
+        return $query->orderBy($orderBy, $orderDirection)->paginate($perPage);
+    }
+
+    public function create(array $data): Review
+    {
+        return Review::create($data);
+    }
+
+    public function update(Review $review, array $data): Review
+    {
+        $review->update($data);
+        return $review->fresh(['experience', 'booking', 'traveler', 'provider']);
+    }
+
+    public function incrementHelpfulCount(Review $review): Review
+    {
+        $review->increment('helpful_count');
+        return $review->fresh(['experience', 'booking', 'traveler', 'provider']);
+    }
 }
 

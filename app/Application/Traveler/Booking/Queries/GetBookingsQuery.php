@@ -16,3 +16,4 @@ readonly class GetBookingsQuery
 }
 
 
+

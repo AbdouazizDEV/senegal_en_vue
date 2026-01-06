@@ -75,3 +75,4 @@ class TravelBookEntry extends Model
     }
 }
 
+

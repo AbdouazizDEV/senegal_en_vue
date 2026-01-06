@@ -54,3 +54,4 @@ class Favorite extends Model
 }
 
 
+

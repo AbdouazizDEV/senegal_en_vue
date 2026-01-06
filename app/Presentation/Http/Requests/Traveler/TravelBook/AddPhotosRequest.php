@@ -33,3 +33,4 @@ class AddPhotosRequest extends FormRequest
     }
 }
 
+

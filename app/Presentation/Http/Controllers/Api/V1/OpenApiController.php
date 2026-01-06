@@ -178,6 +178,83 @@ namespace App\Presentation\Http\Controllers\Api\V1;
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
+ * 
+ * @OA\Schema(
+ *     schema="Conversation",
+ *     type="object",
+ *     required={"id", "uuid", "status"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="subject", type="string", nullable=true, example="Question sur l'expérience"),
+ *     @OA\Property(property="status", type="string", enum={"active", "archived", "blocked"}, example="active"),
+ *     @OA\Property(property="last_message_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="unread_count_traveler", type="integer", example=0),
+ *     @OA\Property(property="unread_count_provider", type="integer", example=1),
+ *     @OA\Property(property="provider", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="experience", ref="#/components/schemas/Experience", nullable=true),
+ *     @OA\Property(property="booking", ref="#/components/schemas/Booking", nullable=true),
+ *     @OA\Property(property="latest_message", ref="#/components/schemas/Message", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ * 
+ * @OA\Schema(
+ *     schema="Message",
+ *     type="object",
+ *     required={"id", "uuid", "content", "type"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="content", type="string", example="Bonjour, j'aimerais avoir plus d'informations..."),
+ *     @OA\Property(property="type", type="string", enum={"text", "image", "file", "system"}, example="text"),
+ *     @OA\Property(property="attachments", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="is_read", type="boolean", example=false),
+ *     @OA\Property(property="read_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="sender", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="receiver", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ * 
+ * @OA\Schema(
+ *     schema="Notification",
+ *     type="object",
+ *     required={"id", "uuid", "type", "title", "message"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="type", type="string", example="booking_confirmed"),
+ *     @OA\Property(property="title", type="string", example="Réservation confirmée"),
+ *     @OA\Property(property="message", type="string", example="Votre réservation a été confirmée"),
+ *     @OA\Property(property="data", type="object", nullable=true),
+ *     @OA\Property(property="is_read", type="boolean", example=false),
+ *     @OA\Property(property="read_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="sent_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time")
+ * )
+ * 
+ * @OA\Schema(
+ *     schema="HeritageStory",
+ *     type="object",
+ *     required={"id", "uuid", "title", "content", "status"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="title", type="string", example="L'histoire de Gorée"),
+ *     @OA\Property(property="slug", type="string", example="l-histoire-de-goree"),
+ *     @OA\Property(property="content", type="string", example="Il était une fois..."),
+ *     @OA\Property(property="excerpt", type="string", nullable=true),
+ *     @OA\Property(property="author_name", type="string", nullable=true, example="Amadou Diallo"),
+ *     @OA\Property(property="author_location", type="string", nullable=true, example="Dakar, Sénégal"),
+ *     @OA\Property(property="images", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="tags", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="status", type="string", enum={"draft", "published", "archived"}, example="published"),
+ *     @OA\Property(property="status_label", type="string", example="Publié"),
+ *     @OA\Property(property="is_featured", type="boolean", example=false),
+ *     @OA\Property(property="views_count", type="integer", example=0),
+ *     @OA\Property(property="likes_count", type="integer", example=0),
+ *     @OA\Property(property="creator", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="published_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
  */
 class OpenApiController
 {

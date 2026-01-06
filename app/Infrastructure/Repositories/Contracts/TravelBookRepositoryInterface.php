@@ -25,3 +25,4 @@ interface TravelBookRepositoryInterface
     public function getByDateRange(int $travelerId, string $startDate, string $endDate): Collection;
 }
 
+

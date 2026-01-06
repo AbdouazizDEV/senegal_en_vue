@@ -6,7 +6,17 @@ use App\Presentation\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Presentation\Http\Controllers\Api\V1\Auth\PasswordController;
 use App\Presentation\Http\Controllers\Api\V1\Admin\ExperienceController;
 use App\Presentation\Http\Controllers\Api\V1\Admin\UserController;
+use App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController;
 use App\Presentation\Http\Controllers\Api\V1\Admin\BookingController as AdminBookingController;
+use App\Presentation\Http\Controllers\Api\V1\Heritage\HeritageController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\MessageController;
+use App\Presentation\Http\Controllers\Api\V1\Traveler\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes - Sénégal en Vue
@@ -27,18 +37,28 @@ Route::prefix('v1')->group(function () {
     // EXPÉRIENCES PUBLIQUES (Accessibles à tous sans authentification)
     // ========================================================================
     Route::prefix('experiences')->group(function () {
-        Route::get('/', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'index']);
-        Route::post('/search', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'search']);
-        Route::get('/featured', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'featured']);
-        Route::get('/recent', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'recent']);
-        Route::get('/by-region', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byRegion']);
-        Route::get('/by-theme', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byTheme']);
-        Route::get('/by-price', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'byPrice']);
-        Route::get('/{id}', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'show']);
-        Route::get('/{id}/availability', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'availability']);
-        Route::get('/{id}/photos', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'photos']);
-        Route::get('/{id}/similar', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'similar']);
-        Route::get('/{id}/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'getExperienceReviews']);
+        Route::get('/', [ExperienceController::class, 'index']);
+        Route::post('/search', [ExperienceController::class, 'search']);
+        Route::get('/featured', [ExperienceController::class, 'featured']);
+        Route::get('/recent', [ExperienceController::class, 'recent']);
+        Route::get('/by-region', [ExperienceController::class, 'byRegion']);
+        Route::get('/by-theme', [ExperienceController::class, 'byTheme']);
+        Route::get('/by-price', [ExperienceController::class, 'byPrice']);
+        Route::get('/{id}', [ExperienceController::class, 'show']);
+        Route::get('/{id}/availability', [ExperienceController::class, 'availability']);
+        Route::get('/{id}/photos', [ExperienceController::class, 'photos']);
+        Route::get('/{id}/similar', [ExperienceController::class, 'similar']);
+        Route::get('/{id}/reviews', [ReviewController::class, 'getExperienceReviews']);
+    });
+    
+    // ========================================================================
+    // HISTOIRES DU PATRIMOINE (Accessibles à tous)
+    // ========================================================================
+    Route::prefix('heritage')->group(function () {
+        Route::get('/stories', [HeritageController::class, 'index']);
+        Route::get('/stories/by-region', [HeritageController::class, 'byRegion']);
+        Route::get('/stories/{id}', [HeritageController::class, 'show']);
+        Route::post('/stories/{id}/favorite', [HeritageController::class, 'favorite'])->middleware('auth:api');
     });
     
     // Authentification
@@ -69,44 +89,57 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
     // ========================================================================
     Route::prefix('traveler')->middleware('role:traveler')->group(function () {
         // Mode découverte
-        Route::get('/discovery/suggestions', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'suggestions']);
-        Route::post('/discovery/preferences', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'preferences']);
-        Route::get('/discovery/trending', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'trending']);
-        Route::get('/discovery/hidden-gems', [App\Presentation\Http\Controllers\Api\V1\Traveler\DiscoveryController::class, 'hiddenGems']);
+        Route::get('/discovery/suggestions', [DiscoveryController::class, 'suggestions']);
+        Route::post('/discovery/preferences', [DiscoveryController::class, 'preferences']);
+        Route::get('/discovery/trending', [DiscoveryController::class, 'trending']);
+        Route::get('/discovery/hidden-gems', [DiscoveryController::class, 'hiddenGems']);
         
         // Gestion des favoris
-        Route::get('/favorites', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'index']);
-        Route::post('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'store']);
-        Route::delete('/favorites/{experienceId}', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'destroy']);
-        Route::get('/favorites/alerts', [App\Presentation\Http\Controllers\Api\V1\Traveler\FavoriteController::class, 'alerts']);
+        Route::get('/favorites', [FavoriteController::class, 'index']);
+        Route::post('/favorites/{experienceId}', [FavoriteController::class, 'store']);
+        Route::delete('/favorites/{experienceId}', [FavoriteController::class, 'destroy']);
+        Route::get('/favorites/alerts', [FavoriteController::class, 'alerts']);
         
         // Gestion des réservations
-        Route::get('/bookings', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'index']);
-        Route::post('/bookings', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'store']);
-        Route::get('/bookings/upcoming', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'upcoming']);
-        Route::get('/bookings/pending', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'pending']);
-        Route::get('/bookings/confirmed', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'confirmed']);
-        Route::get('/bookings/history', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'history']);
-        Route::get('/bookings/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'show']);
-        Route::put('/bookings/{id}/cancel', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'cancel']);
-        Route::get('/bookings/{id}/voucher', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'voucher']);
+        Route::get('/bookings', [BookingController::class, 'index']);
+        Route::post('/bookings', [BookingController::class, 'store']);
+        Route::get('/bookings/upcoming', [BookingController::class, 'upcoming']);
+        Route::get('/bookings/pending', [BookingController::class, 'pending']);
+        Route::get('/bookings/confirmed', [BookingController::class, 'confirmed']);
+        Route::get('/bookings/history', [BookingController::class, 'history']);
+        Route::get('/bookings/{id}', [BookingController::class, 'show']);
+        Route::put('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
+        Route::get('/bookings/{id}/voucher', [BookingController::class, 'voucher']);
         
         // Carnet de voyage
-        Route::get('/travelbook', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'index']);
-        Route::post('/travelbook/entries', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'store']);
-        Route::get('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'show']);
-        Route::put('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'update']);
-        Route::delete('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'destroy']);
-        Route::post('/travelbook/entries/{id}/photos', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'addPhotos']);
-        Route::post('/travelbook/share', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'share']);
-        Route::get('/travelbook/export', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'export']);
+        Route::get('/travelbook', [TravelBookController::class, 'index']);
+        Route::post('/travelbook/entries', [TravelBookController::class, 'store']);
+        Route::get('/travelbook/entries/{id}', [TravelBookController::class, 'show']);
+        Route::put('/travelbook/entries/{id}', [TravelBookController::class, 'update']);
+        Route::delete('/travelbook/entries/{id}', [TravelBookController::class, 'destroy']);
+        Route::post('/travelbook/entries/{id}/photos', [TravelBookController::class, 'addPhotos']);
+        Route::post('/travelbook/share', [TravelBookController::class, 'share']);
+        Route::get('/travelbook/export', [TravelBookController::class, 'export']);
         
         // Avis et évaluations
-        Route::get('/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'index']);
-        Route::post('/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'store']);
-        Route::put('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'update']);
-        Route::delete('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'destroy']);
-        Route::post('/reviews/{id}/helpful', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'markHelpful']);
+        Route::get('/reviews', [ReviewController::class, 'index']);
+        Route::post('/reviews', [ReviewController::class, 'store']);
+        Route::put('/reviews/{id}', [ReviewController::class, 'update']);
+        Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
+        Route::post('/reviews/{id}/helpful', [ReviewController::class, 'markHelpful']);
+        
+        // Communication
+        Route::get('/messages', [MessageController::class, 'index']);
+        Route::post('/messages/providers/{providerId}', [MessageController::class, 'contactProvider']);
+        Route::get('/messages/{conversationId}', [MessageController::class, 'show']);
+        Route::post('/messages/{conversationId}/reply', [MessageController::class, 'reply']);
+        Route::get('/messages/unread', [MessageController::class, 'unread']);
+        
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::put('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::get('/notifications/unread', [NotificationController::class, 'unread']);
+        Route::put('/notifications/settings', [NotificationController::class, 'updateSettings']);
     });
     
     // ========================================================================
@@ -150,13 +183,13 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::put('/bookings/{id}/cancel', [AdminBookingController::class, 'cancel']);
         
         // Gestion des paiements
-        Route::get('/payments', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'index']);
-        Route::get('/payments/statistics', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'statistics']);
-        Route::get('/payments/disputes', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'disputes']);
-        Route::get('/payments/commissions', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'commissions']);
-        Route::get('/payments/{id}', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'show']);
-        Route::post('/payments/refund', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'refund']);
-        Route::put('/payments/{id}/transfer', [App\Presentation\Http\Controllers\Api\V1\Admin\PaymentController::class, 'transfer']);
+        Route::get('/payments', [PaymentController::class, 'index']);
+        Route::get('/payments/statistics', [PaymentController::class, 'statistics']);
+        Route::get('/payments/disputes', [PaymentController::class, 'disputes']);
+        Route::get('/payments/commissions', [PaymentController::class, 'commissions']);
+        Route::get('/payments/{id}', [PaymentController::class, 'show']);
+        Route::post('/payments/refund', [PaymentController::class, 'refund']);
+        Route::put('/payments/{id}/transfer', [PaymentController::class, 'transfer']);
         
         // Gestion des avis et notations
         Route::get('/reviews', [App\Presentation\Http\Controllers\Api\V1\Admin\ReviewController::class, 'index']);
@@ -189,9 +222,9 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
     // ROUTES VOYAGEUR (Authentifiés avec rôle traveler)
     // ========================================================================
     Route::prefix('traveler')->middleware('role:traveler')->group(function () {
-        Route::get('/profile', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'show']);
-        Route::put('/profile', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'update']);
-        Route::post('/profile/photo', [App\Presentation\Http\Controllers\Api\V1\Traveler\ProfileController::class, 'updatePhoto']);
+        Route::get('/profile', [ProfileController::class, 'show']);
+        Route::put('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/photo', [ProfileController::class, 'updatePhoto']);
     });
     
     // ========================================================================

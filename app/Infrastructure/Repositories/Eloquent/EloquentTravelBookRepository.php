@@ -97,3 +97,4 @@ class EloquentTravelBookRepository implements TravelBookRepositoryInterface
     }
 }
 
+

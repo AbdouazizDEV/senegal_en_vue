@@ -21,5 +21,16 @@ interface ReviewRepositoryInterface
     public function delete(Review $review): bool;
     
     public function getStatistics(): array;
+    
+    // Méthodes pour les voyageurs
+    public function findByTravelerId(int $travelerId, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    
+    public function findByExperienceId(int $experienceId, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    
+    public function create(array $data): Review;
+    
+    public function update(Review $review, array $data): Review;
+    
+    public function incrementHelpfulCount(Review $review): Review;
 }
 

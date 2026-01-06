@@ -38,6 +38,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/{id}/availability', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'availability']);
         Route::get('/{id}/photos', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'photos']);
         Route::get('/{id}/similar', [App\Presentation\Http\Controllers\Api\V1\Public\ExperienceController::class, 'similar']);
+        Route::get('/{id}/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'getExperienceReviews']);
     });
     
     // Authentification
@@ -89,6 +90,23 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::get('/bookings/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'show']);
         Route::put('/bookings/{id}/cancel', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'cancel']);
         Route::get('/bookings/{id}/voucher', [App\Presentation\Http\Controllers\Api\V1\Traveler\BookingController::class, 'voucher']);
+        
+        // Carnet de voyage
+        Route::get('/travelbook', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'index']);
+        Route::post('/travelbook/entries', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'store']);
+        Route::get('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'show']);
+        Route::put('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'update']);
+        Route::delete('/travelbook/entries/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'destroy']);
+        Route::post('/travelbook/entries/{id}/photos', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'addPhotos']);
+        Route::post('/travelbook/share', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'share']);
+        Route::get('/travelbook/export', [App\Presentation\Http\Controllers\Api\V1\Traveler\TravelBookController::class, 'export']);
+        
+        // Avis et évaluations
+        Route::get('/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'index']);
+        Route::post('/reviews', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'store']);
+        Route::put('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'update']);
+        Route::delete('/reviews/{id}', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'destroy']);
+        Route::post('/reviews/{id}/helpful', [App\Presentation\Http\Controllers\Api\V1\Traveler\ReviewController::class, 'markHelpful']);
     });
     
     // ========================================================================

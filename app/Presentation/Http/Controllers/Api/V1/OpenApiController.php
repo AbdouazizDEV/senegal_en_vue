@@ -127,6 +127,57 @@ namespace App\Presentation\Http\Controllers\Api\V1;
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
+ * 
+ * @OA\Schema(
+ *     schema="TravelBookEntry",
+ *     type="object",
+ *     required={"id", "uuid", "title", "content", "entry_date", "visibility"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="title", type="string", example="Ma journée à Dakar"),
+ *     @OA\Property(property="content", type="string", example="J'ai passé une merveilleuse journée..."),
+ *     @OA\Property(property="entry_date", type="string", format="date", example="2026-03-15"),
+ *     @OA\Property(property="location", type="string", nullable=true, example="Dakar, Sénégal"),
+ *     @OA\Property(property="location_details", type="object", nullable=true),
+ *     @OA\Property(property="photos", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="tags", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="visibility", type="string", enum={"private", "friends", "public"}, example="private"),
+ *     @OA\Property(property="visibility_label", type="string", example="Privé"),
+ *     @OA\Property(property="is_featured", type="boolean", example=false),
+ *     @OA\Property(property="views_count", type="integer", example=0),
+ *     @OA\Property(property="metadata", type="object", nullable=true),
+ *     @OA\Property(property="experience", ref="#/components/schemas/Experience", nullable=true),
+ *     @OA\Property(property="booking", ref="#/components/schemas/Booking", nullable=true),
+ *     @OA\Property(property="traveler", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ * 
+ * @OA\Schema(
+ *     schema="Review",
+ *     type="object",
+ *     required={"id", "uuid", "rating", "comment", "status"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="uuid", type="string", example="7514c633-716e-4d88-9ef5-46f8fc6dc714"),
+ *     @OA\Property(property="rating", type="integer", minimum=1, maximum=5, example=5),
+ *     @OA\Property(property="title", type="string", nullable=true, example="Expérience exceptionnelle"),
+ *     @OA\Property(property="comment", type="string", example="J'ai passé un moment inoubliable..."),
+ *     @OA\Property(property="status", type="string", enum={"pending", "approved", "rejected", "reported"}, example="pending"),
+ *     @OA\Property(property="status_label", type="string", example="En attente"),
+ *     @OA\Property(property="is_verified", type="boolean", example=true),
+ *     @OA\Property(property="is_featured", type="boolean", example=false),
+ *     @OA\Property(property="helpful_count", type="integer", example=0),
+ *     @OA\Property(property="rejection_reason", type="string", nullable=true),
+ *     @OA\Property(property="approved_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="rejected_at", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="images", type="array", @OA\Items(type="string"), nullable=true),
+ *     @OA\Property(property="experience", ref="#/components/schemas/Experience", nullable=true),
+ *     @OA\Property(property="traveler", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="provider", ref="#/components/schemas/User", nullable=true),
+ *     @OA\Property(property="booking", ref="#/components/schemas/Booking", nullable=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
  */
 class OpenApiController
 {
